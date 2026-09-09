@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { topicId } = await params;
   const topic = await prisma.topic.findUnique({ where: { id: topicId } });
   return {
-    title: `Gap Analysis: ${topic?.name || 'Topic'} — Resourcify`,
+    title: `Gap Analysis: ${topic?.name || 'Topic'} — GapZero`,
   };
 }
 
@@ -71,7 +71,7 @@ export default async function ResultPage({ params, searchParams }: PageProps) {
           </Link>
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">R</span>
+              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
             </div>
           </Link>
         </div>

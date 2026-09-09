@@ -25,9 +25,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resourcify — Find Your Exact Gap, Fix It Fast",
+  title: "GapZero — Find Your Exact Gap, Fix It Fast",
   description:
-    "Resourcify diagnoses your exact conceptual weakness and gives you the smallest possible fix. Built for JEE aspirants who want precision, not more content.",
+    "GapZero diagnoses your exact conceptual weakness and gives you the smallest possible fix. Built for JEE aspirants who want precision, not more content.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

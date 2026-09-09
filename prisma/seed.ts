@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 // ═══════════════════════════════════════════════════════════
 
 async function main() {
-  console.log('🌱 Seeding Resourcify database...');
+  console.log('🌱 Seeding GapZero database...');
 
   // ─── Demo User ───
   const user = await prisma.user.create({

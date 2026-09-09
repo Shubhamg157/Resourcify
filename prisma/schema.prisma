@@ -1,4 +1,4 @@
-// Resourcify — Prisma Schema
+// GapZero — Prisma Schema
 // Using SQLite for prototype; swap to PostgreSQL by changing only the datasource block.
 
 generator client {

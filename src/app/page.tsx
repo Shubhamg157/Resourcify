@@ -7,10 +7,10 @@ export default function LandingPage() {
       <nav className="flex items-center justify-between px-8 py-5 border-b border-border">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-crimson rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-sm font-[family-name:var(--font-serif)]">R</span>
+            <span className="text-white font-bold text-sm font-[family-name:var(--font-serif)]">G</span>
           </div>
           <span className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)]">
-            Resourcify
+            GapZero
           </span>
         </div>
         <div className="flex items-center gap-6">
@@ -48,7 +48,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg text-obsidian-subtle max-w-xl mx-auto mb-10 leading-relaxed">
-            Resourcify doesn&apos;t give you more resources — it finds the{' '}
+            GapZero doesn&apos;t give you more resources — it finds the{' '}
             <strong className="text-obsidian">exact concept</strong> you don&apos;t
             understand and gives you the{' '}
             <strong className="text-obsidian">smallest possible fix</strong>.
@@ -66,7 +66,7 @@ export default function LandingPage() {
           {/* ─── How It Works ─── */}
           <div className="border-t border-border pt-12">
             <p className="text-xs uppercase tracking-widest text-sand mb-8 font-semibold">
-              The Resourcify Loop
+              The GapZero Loop
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {[
@@ -93,7 +93,7 @@ export default function LandingPage() {
       {/* ─── Footer ─── */}
       <footer className="border-t border-border px-8 py-4">
         <div className="flex items-center justify-between text-xs text-obsidian-subtle">
-          <span>© 2024 Resourcify</span>
+          <span>© 2024 GapZero</span>
           <span className="mono-number">Built for JEE aspirants</span>
         </div>
       </footer>

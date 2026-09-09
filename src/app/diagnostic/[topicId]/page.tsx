@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: PageProps) {
     where: { id: topicId },
     include: { chapter: { include: { subject: true } } },
   });
-  if (!topic) return { title: 'Diagnostic — Resourcify' };
+  if (!topic) return { title: 'Diagnostic — GapZero' };
   return {
-    title: `Diagnostic: ${topic.name} — Resourcify`,
+    title: `Diagnostic: ${topic.name} — GapZero`,
     description: `5-question micro diagnostic for ${topic.name}`,
   };
 }

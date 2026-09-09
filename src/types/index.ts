@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// Resourcify — Shared TypeScript Types
+// GapZero — Shared TypeScript Types
 // ═══════════════════════════════════════════════════════════
 
 // ─── Question Types ───

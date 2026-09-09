@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { TopicSelector } from './TopicSelector';
 
 export const metadata = {
-  title: 'Select Topic — Resourcify',
+  title: 'Select Topic — GapZero',
   description: 'Choose a topic to diagnose your conceptual understanding',
 };
 
@@ -36,10 +36,10 @@ export default async function TopicsPage() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">R</span>
+              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
             </div>
             <span className="text-base font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              Resourcify
+              GapZero
             </span>
           </Link>
           <div className="flex items-center gap-4">

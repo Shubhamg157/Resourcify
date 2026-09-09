@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps) {
     include: { concept: true },
   });
   return {
-    title: `Recovery: ${stack?.concept.name || 'Stack'} — Resourcify`,
+    title: `Recovery: ${stack?.concept.name || 'Stack'} — GapZero`,
   };
 }
 
@@ -59,7 +59,7 @@ export default async function RecoveryPage({ params }: PageProps) {
             </span>
             <Link href="/" className="flex items-center gap-2">
               <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">R</span>
+                <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
               </div>
             </Link>
           </div>

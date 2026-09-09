@@ -125,7 +125,7 @@ export function ChatWidget() {
           {/* Header */}
           <div className="px-4 py-3 border-b border-border bg-pearl flex items-center gap-3">
             <div className="w-8 h-8 bg-crimson rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs font-bold font-[family-name:var(--font-serif)]">R</span>
+              <span className="text-white text-xs font-bold font-[family-name:var(--font-serif)]">G</span>
             </div>
             <div>
               <p className="text-sm font-bold text-obsidian font-[family-name:var(--font-serif)]">Study Assistant</p>

@@ -1,4 +1,4 @@
-# Resourcify
+# GapZero
 
 > **Stop Studying Everything. Fix What's Broken.**  
 > A targeted precision learning platform built for JEE aspirants that diagnoses the exact conceptual gap you have and prescribes the smallest possible recovery stack.
@@ -41,8 +41,8 @@
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/Shubhamg157/Resourcify.git
-cd Resourcify
+git clone https://github.com/Shubhamg157/GapZero.git
+cd GapZero
 npm install
 ```
 

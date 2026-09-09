@@ -43,7 +43,7 @@ export async function generateChatResponse(
     `Recovery: ${s.concept.name} (${s.completed ? `done, recheck: ${s.recheckScore ?? 'pending'}` : 'in progress'})`
   ).join('\n');
 
-  const prompt = `You are a JEE study assistant for the Resourcify app. You help students understand concepts and navigate their learning.
+  const prompt = `You are a JEE study assistant for the GapZero app. You help students understand concepts and navigate their learning.
 
 STUDENT'S RECENT CONTEXT:
 ${sessionContext || 'No diagnostics taken yet.'}
@@ -68,7 +68,7 @@ Respond as JSON:
 
   try {
     const response = await callGeminiJSON(
-      'You are a JEE study assistant for the Resourcify app. Respond as JSON with keys: mode ("academic"|"navigation"), content, suggestedResources (optional array), followUp (optional string). Keep responses under 250 words.',
+      'You are a JEE study assistant for the GapZero app. Respond as JSON with keys: mode ("academic"|"navigation"), content, suggestedResources (optional array), followUp (optional string). Keep responses under 250 words.',
       prompt
     );
     return response as ChatResponse;

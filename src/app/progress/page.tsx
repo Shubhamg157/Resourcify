@@ -4,7 +4,7 @@ import { DEMO_USER_ID } from '@/types';
 import { MasteryChart } from './MasteryChart';
 
 export const metadata = {
-  title: 'Progress — Resourcify',
+  title: 'Progress — GapZero',
   description: 'Track your concept mastery across all subjects.',
 };
 
@@ -83,10 +83,10 @@ export default async function ProgressPage() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">R</span>
+              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
             </div>
             <span className="text-base font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              Resourcify
+              GapZero
             </span>
           </Link>
           <div className="flex items-center gap-4">
