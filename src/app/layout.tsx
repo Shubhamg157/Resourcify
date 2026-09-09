@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { NavigationProgress } from "@/components/NavigationProgress";
+import { ChatWidget } from "@/components/ChatWidget";
 
 const playfair = Playfair_Display({
   variable: "--font-serif",
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NavigationProgress />
         </Suspense>
         {children}
+        <ChatWidget />
       </body>
     </html>
   );
