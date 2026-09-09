@@ -16,55 +16,53 @@ export function MasteryChart({ concepts }: { concepts: ConceptMastery[] }) {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {displayed.map((concept) => (
-          <div
-            key={concept.name}
-            className="flex items-center gap-3 p-3 rounded-lg bg-pearl border border-border/60 hover:border-sand transition-colors"
-          >
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-obsidian truncate">{concept.name}</p>
-              <p className="text-xs text-obsidian-subtle truncate">
-                {concept.chapterName} → {concept.topicName}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-16 h-1.5 rounded-full bg-pearl-dark overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${concept.mastery}%`,
-                    backgroundColor:
-                      concept.mastery >= 70
-                        ? 'var(--color-mastery-high)'
-                        : concept.mastery >= 40
-                        ? 'var(--color-mastery-mid)'
-                        : 'var(--color-mastery-low)',
-                  }}
-                />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {displayed.map((concept) => {
+          const isHigh = concept.mastery >= 70;
+          const isMid = concept.mastery >= 40 && concept.mastery < 70;
+          const isLow = concept.mastery < 40;
+          
+          let colorClass = 'bg-brutalBlack';
+          let textColor = 'text-brutalBlack';
+          if (isHigh) { colorClass = 'bg-retroTeal'; textColor = 'text-retroTeal'; }
+          if (isMid) { colorClass = 'bg-schoolYellow-deep'; textColor = 'text-schoolYellow-deep'; }
+          if (isLow) { colorClass = 'bg-red-500'; textColor = 'text-red-600'; }
+
+          return (
+            <div
+              key={concept.name}
+              className="bg-white border-[2px] border-brutalBlack p-4 hover:translate-y-[-2px] hover:translate-x-[-2px] transition-transform shadow-brutal-sm"
+            >
+              <div className="flex flex-col gap-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-black text-brutalBlack truncate uppercase tracking-tight">{concept.name}</p>
+                    <p className="font-mono text-[10px] font-bold text-neutral-500 truncate uppercase mt-0.5">
+                      {concept.chapterName} // {concept.topicName}
+                    </p>
+                  </div>
+                  <span className={`font-mono text-sm font-black ${textColor} bg-paper-200 px-1 border border-brutalBlack shrink-0`}>
+                    {concept.mastery}%
+                  </span>
+                </div>
+                <div className="w-full h-3.5 bg-paper-200 border-[1.5px] border-brutalBlack p-[1.5px]">
+                  <div
+                    className={`h-full border border-brutalBlack transition-all duration-500 ${colorClass}`}
+                    style={{ width: `${concept.mastery}%` }}
+                  />
+                </div>
               </div>
-              <span
-                className={`mono-number text-xs font-bold w-8 text-right ${
-                  concept.mastery >= 70
-                    ? 'text-mastery-high'
-                    : concept.mastery >= 40
-                    ? 'text-mastery-mid'
-                    : 'text-mastery-low'
-                }`}
-              >
-                {concept.mastery}%
-              </span>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {concepts.length > 6 && (
         <button
           onClick={() => setShowAll(!showAll)}
-          className="text-xs text-crimson font-semibold hover:text-crimson-light mt-4 cursor-pointer"
+          className="w-full bg-paper-200 hover:bg-brutalBlack hover:text-white text-brutalBlack font-mono text-xs font-black uppercase py-3 border-[2.5px] border-brutalBlack mt-6 transition-colors shadow-brutal-sm"
         >
-          {showAll ? 'Show less ↑' : `Show all ${concepts.length} concepts ↓`}
+          {showAll ? 'Collapse Directory ↑' : `Expand Directory (${concepts.length - 6} Hidden) ↓`}
         </button>
       )}
     </div>

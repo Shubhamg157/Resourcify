@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { RecheckQuiz } from './RecheckQuiz';
+import { Header } from '@/components/Header';
 
 interface PageProps {
   params: Promise<{ stackId: string }>;
@@ -45,53 +46,73 @@ export default async function RecheckPage({ params }: PageProps) {
 
   // If already rechecked, show results directly
   if (stack.recheckScore !== null) {
+    const passed = stack.recheckScore >= 70;
+    
     return (
-      <div className="min-h-screen bg-pearl">
-        <header className="bg-white border-b border-border">
-          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="min-h-screen flex flex-col">
+        <Header />
+
+        <div className="bg-schoolYellow border-b-[3px] border-brutalBlack sticky top-0 z-40 shadow-brutal-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             <Link
               href={`/recovery/${stackId}`}
-              className="text-sm text-crimson hover:text-crimson-light transition-colors"
+              className="font-mono text-xs font-black text-brutalBlack hover:underline uppercase flex items-center gap-1"
             >
-              ← Back to Recovery Stack
+              <span>←</span> BACK TO RECOVERY STACK
             </Link>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
+          </div>
+        </div>
+
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-grow flex flex-col justify-center">
+          <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-8 sm:p-12 text-center relative overflow-hidden max-w-3xl mx-auto w-full">
+            <div className={`absolute top-0 right-0 border-l-[3px] border-b-[3px] border-brutalBlack px-4 py-1.5 font-mono text-xs font-black uppercase tracking-wider ${passed ? 'bg-retroTeal text-white' : 'bg-red-500 text-white'}`}>
+              {passed ? 'VERIFICATION SUCCESS' : 'VERIFICATION FAILED'}
+            </div>
+
+            <span className="font-mono text-xs font-black uppercase tracking-widest mb-4 mt-6 inline-block bg-paper-200 border border-brutalBlack px-2 py-0.5">
+              RECHECK AUDIT COMPLETE
+            </span>
+            
+            <h1 className="text-3xl sm:text-4xl font-black text-brutalBlack uppercase tracking-tight mb-4">
+              {stack.concept.name}
+            </h1>
+
+            <div className={`font-mono text-6xl sm:text-8xl font-black tracking-tight my-6 ${
+              passed ? 'text-retroTeal' : stack.recheckScore >= 40 ? 'text-schoolYellow-deep' : 'text-red-600'
+            }`}>
+              {stack.recheckScore}%
+            </div>
+
+            {passed ? (
+              <div className="bg-retroTeal-soft border-[2.5px] border-retroTeal-dark text-retroTeal-dark p-5 mt-4 mb-8 text-left max-w-xl mx-auto shadow-brutal-sm">
+                <p className="font-black text-base uppercase tracking-tight mb-1 flex items-center gap-2">
+                  <span>🎉</span> CONCEPTUAL GAP FIXED
+                </p>
+                <p className="font-mono text-xs font-bold uppercase">
+                  Great work! The gap has been fixed. This concept is now marked as mastered in your knowledge graph.
+                </p>
               </div>
-            </Link>
-          </div>
-        </header>
+            ) : (
+              <div className="bg-red-50 border-[2.5px] border-red-500 text-red-900 p-5 mt-4 mb-8 text-left max-w-xl mx-auto shadow-brutal-sm">
+                <p className="font-black text-base uppercase tracking-tight mb-1 flex items-center gap-2">
+                  <span>⚠️</span> REPAIR INCOMPLETE
+                </p>
+                <p className="font-mono text-xs font-bold uppercase">
+                  {stack.recheckScore >= 40 
+                    ? 'Good progress! However, the intuition is still shaky. Consider reviewing the recovery stack once more.'
+                    : 'Keep practicing. Your intuition needs a structural repair. Review the explanation and try again.'}
+                </p>
+              </div>
+            )}
 
-        <main className="max-w-3xl mx-auto px-6 py-12 text-center animate-fade-in">
-          <span className="tag tag-crimson text-xs uppercase tracking-widest mb-3 inline-block">
-            Recheck Complete
-          </span>
-          <h1 className="text-3xl font-bold text-obsidian font-[family-name:var(--font-serif)] mb-3">
-            {stack.concept.name}
-          </h1>
-
-          <div className={`mono-number text-6xl font-bold my-8 ${
-            stack.recheckScore >= 70 ? 'text-mastery-high' : stack.recheckScore >= 40 ? 'text-mastery-mid' : 'text-mastery-low'
-          }`}>
-            {stack.recheckScore}%
-          </div>
-
-          <p className="text-obsidian-subtle mb-8">
-            {stack.recheckScore >= 70
-              ? '🎉 Great work! The gap has been fixed. This concept is now mastered.'
-              : stack.recheckScore >= 40
-              ? '📈 Good progress! Consider reviewing the recovery stack once more.'
-              : '🔄 Keep practicing. Review the explanation and try again.'}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/topics" className="btn-primary px-8 py-3">
-              Diagnose Another Topic →
-            </Link>
-            <Link href="/progress" className="btn-secondary px-8 py-3">
-              View Progress
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/topics" className="w-full sm:w-auto bg-brutalBlack text-white hover:bg-neutral-800 font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                DIAGNOSE ANOTHER TOPIC ➔
+              </Link>
+              <Link href="/progress" className="w-full sm:w-auto bg-white text-brutalBlack hover:bg-paper-200 font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                VIEW PROGRESS LOG
+              </Link>
+            </div>
           </div>
         </main>
       </div>
@@ -139,43 +160,41 @@ export default async function RecheckPage({ params }: PageProps) {
     });
   }
 
-  const breadcrumb = `${stack.concept.subtopic.topic.chapter.subject.name} → ${stack.concept.subtopic.topic.chapter.name} → ${stack.concept.subtopic.topic.name}`;
+  const breadcrumb = `${stack.concept.subtopic.topic.chapter.subject.name} // ${stack.concept.subtopic.topic.chapter.name} // ${stack.concept.subtopic.topic.name}`;
 
   return (
-    <div className="min-h-screen bg-pearl">
-      {/* ─── Header ─── */}
-      <header className="bg-white border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      <div className="bg-schoolYellow border-b-[3px] border-brutalBlack sticky top-0 z-40 shadow-brutal-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
           <Link
             href={`/recovery/${stackId}`}
-            className="text-sm text-crimson hover:text-crimson-light transition-colors"
+            className="font-mono text-xs font-black text-brutalBlack hover:underline uppercase flex items-center gap-1"
           >
-            ← Back to Recovery Stack
-          </Link>
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
-            </div>
+            <span>←</span> ABORT TO RECOVERY STACK
           </Link>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8 flex-grow">
         {/* ─── Title ─── */}
-        <div className="mb-8 animate-fade-in">
-          <span className="tag tag-crimson text-xs uppercase tracking-widest mb-2 inline-block">
-            Recheck Quiz
-          </span>
-          <h1 className="text-3xl font-bold text-obsidian font-[family-name:var(--font-serif)]">
-            Verify: <span className="crimson-underline text-crimson">{stack.concept.name}</span>
-          </h1>
-          <p className="text-sm text-obsidian-subtle mt-2">
-            {breadcrumb}
-          </p>
-          <p className="text-sm text-obsidian-subtle mt-1">
-            Answer {recheckQuestions.length} questions to verify the fix worked. Score ≥70% to pass.
-          </p>
-        </div>
+        <section className="bg-white border-[3px] border-brutalBlack p-6 sm:p-8 shadow-brutal relative overflow-hidden animate-fade-in">
+          <div className="absolute top-0 right-0 bg-retroTeal border-l-[3px] border-b-[3px] border-brutalBlack px-4 py-1.5 font-mono text-xs font-black text-white uppercase tracking-wider">
+            RECHECK PROTOCOL
+          </div>
+          <div className="max-w-3xl space-y-3 mt-4">
+            <span className="font-mono text-[10px] font-black bg-paper-200 px-2 py-0.5 border border-brutalBlack uppercase">
+              {breadcrumb}
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-black text-brutalBlack tracking-tight leading-tight uppercase">
+              VERIFY: <span className="underline decoration-retroTeal decoration-[4px] underline-offset-4">{stack.concept.name}</span>
+            </h1>
+            <p className="font-mono text-xs font-bold text-neutral-800 uppercase mt-2">
+              Answer {recheckQuestions.length} probes to verify the fix. Score ≥70% to pass.
+            </p>
+          </div>
+        </section>
 
         <RecheckQuiz
           stackId={stackId}

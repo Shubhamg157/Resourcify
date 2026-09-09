@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { FormulaCard } from '@/types';
 import { PracticeSection } from './PracticeSection';
+import { Header } from '@/components/Header';
 
 interface PageProps {
   params: Promise<{ stackId: string }>;
@@ -43,81 +44,85 @@ export default async function RecoveryPage({ params }: PageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-pearl">
-      {/* ─── Header ─── */}
-      <header className="bg-white border-b border-border sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      {/* ─── Persistent Action Bar (Sticky) ─── */}
+      <div className="bg-schoolYellow border-b-[3px] border-brutalBlack sticky top-0 z-40 shadow-brutal-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
           <Link
             href={`/diagnostic/${stack.diagnosticSession.topicId}/result?sessionId=${stack.diagnosticSessionId}`}
-            className="text-sm text-crimson hover:text-crimson-light transition-colors"
+            className="font-mono text-xs font-black text-brutalBlack hover:underline uppercase flex items-center gap-1"
           >
-            ← Back to Diagnosis
+            <span>←</span> ABORT TO DIAGNOSIS
           </Link>
           <div className="flex items-center gap-3">
-            <span className="mono-number text-xs text-sand bg-sand-50 px-3 py-1 rounded-full">
-              ~{stack.estimatedMinutes} min
+            <span className="bg-white font-mono text-[10px] font-black px-2 py-0.5 border-[1.5px] border-brutalBlack uppercase">
+              T-{stack.estimatedMinutes} MIN
             </span>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
-              </div>
-            </Link>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
-        {/* ─── Title ─── */}
-        <div className="mb-8 animate-fade-in">
-          <span className="tag tag-crimson text-xs uppercase tracking-widest mb-2 inline-block">
-            Recovery Stack
-          </span>
-          <h1 className="text-3xl font-bold text-obsidian font-[family-name:var(--font-serif)]">
-            Fix: <span className="crimson-underline text-crimson">{stack.concept.name}</span>
-          </h1>
-          <p className="text-sm text-obsidian-subtle mt-2">
-            {stack.concept.subtopic.topic.chapter.subject.name} → {stack.concept.subtopic.topic.chapter.name} → {stack.concept.subtopic.topic.name}
-          </p>
-        </div>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+        
+        {/* ─── Title & Header ─── */}
+        <section className="bg-white border-[3px] border-brutalBlack p-6 sm:p-8 shadow-brutal relative overflow-hidden animate-fade-in">
+          <div className="absolute top-0 right-0 bg-red-500 border-l-[3px] border-b-[3px] border-brutalBlack px-4 py-1.5 font-mono text-xs font-black text-white uppercase tracking-wider">
+            ACTIVE RECOVERY STACK
+          </div>
+          <div className="max-w-3xl space-y-3 mt-4">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="font-mono text-[10px] font-black bg-paper-200 px-2 py-0.5 border border-brutalBlack uppercase">
+                {stack.concept.subtopic.topic.chapter.subject.name} // {stack.concept.subtopic.topic.chapter.name} // {stack.concept.subtopic.topic.name}
+              </span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brutalBlack tracking-tight leading-tight">
+              FIX: <span className="underline decoration-red-500 decoration-[4px] underline-offset-4">{stack.concept.name}</span>
+            </h1>
+          </div>
+        </section>
 
-        {/* ─── Progress Steps ─── */}
-        <div className="flex items-center gap-2 mb-10 overflow-x-auto pb-2">
+        {/* ─── Progress Steps Ribbon ─── */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar">
           {['Explanation', 'Formulas', 'Resource', 'Practice', 'Recheck'].map((step, i) => (
             <div key={step} className="flex items-center gap-2 flex-shrink-0">
-              <div className="flex items-center gap-1.5">
-                <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 w-6 h-6 rounded-full flex items-center justify-center">
-                  {i + 1}
+              <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 border-[2px] border-brutalBlack shadow-brutal-sm">
+                <span className="font-mono text-xs text-white bg-brutalBlack px-1.5 py-0.5">
+                  0{i + 1}
                 </span>
-                <span className="text-xs font-medium text-obsidian">{step}</span>
+                <span className="text-xs font-black uppercase tracking-wider text-brutalBlack">{step}</span>
               </div>
-              {i < 4 && <span className="text-pearl-dark text-xs">→</span>}
+              {i < 4 && <span className="text-brutalBlack font-black text-lg">➔</span>}
             </div>
           ))}
         </div>
 
         {/* ─── Step 1: Explanation ─── */}
-        <section className="card-elevated p-6 mb-6 animate-slide-up" id="explanation">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 w-6 h-6 rounded-full flex items-center justify-center">
-              1
+        <section className="bg-white border-[3px] border-brutalBlack shadow-brutal animate-slide-up" id="explanation">
+          <div className="bg-paper-200 border-b-[3px] border-brutalBlack px-5 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm bg-brutalBlack text-white px-2 py-1 font-black shadow-brutal-sm">01</span>
+              <h2 className="text-xl font-black uppercase tracking-tight text-brutalBlack">
+                Concept Break-Down
+              </h2>
+            </div>
+            <span className="font-mono text-[10px] font-black uppercase border-[1.5px] border-brutalBlack px-2 py-0.5 bg-white hidden sm:block">
+              ~5 MIN READ
             </span>
-            <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              Understanding the Concept
-            </h2>
-            <span className="tag tag-sand text-xs ml-auto">~5 min read</span>
           </div>
-          <div className="prose prose-sm max-w-none ruled-line">
+          <div className="p-6 sm:p-8 prose prose-brutal max-w-none font-serif text-lg leading-relaxed">
             {stack.explanationText.split('\n').map((paragraph, i) => {
               if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
                 return (
-                  <p key={i} className="font-semibold text-crimson text-sm mt-4 mb-1">
+                  <h4 key={i} className="font-sans font-black text-brutalBlack uppercase text-base mt-6 mb-2 bg-schoolYellow inline-block px-2 border-l-[4px] border-brutalBlack">
                     {paragraph.replace(/\*\*/g, '')}
-                  </p>
+                  </h4>
                 );
               }
               if (paragraph.trim() === '') return <br key={i} />;
               return (
-                <p key={i} className="text-sm text-obsidian leading-relaxed mb-3">
+                <p key={i} className="text-brutalBlack font-medium mb-4">
                   {paragraph}
                 </p>
               );
@@ -126,147 +131,174 @@ export default async function RecoveryPage({ params }: PageProps) {
         </section>
 
         {/* ─── Step 2: Formula Card ─── */}
-        <section className="card-elevated p-6 mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }} id="formulas">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 w-6 h-6 rounded-full flex items-center justify-center">
-              2
+        <section className="bg-white border-[3px] border-brutalBlack shadow-brutal animate-slide-up" style={{ animationDelay: '0.1s' }} id="formulas">
+          <div className="bg-retroTeal border-b-[3px] border-brutalBlack px-5 py-3 flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm bg-white text-retroTeal px-2 py-1 font-black shadow-brutal-sm">02</span>
+              <h2 className="text-xl font-black uppercase tracking-tight">
+                {formulaCard.title || 'Key Formulas'}
+              </h2>
+            </div>
+            <span className="font-mono text-[10px] font-black uppercase border-[1.5px] border-white px-2 py-0.5 text-white hidden sm:block">
+              ~2 MIN
             </span>
-            <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              {formulaCard.title || 'Key Formulas'}
-            </h2>
-            <span className="tag tag-sand text-xs ml-auto">~2 min</span>
           </div>
-
-          <div className="space-y-4">
+          <div className="p-6 sm:p-8 space-y-6 bg-paper-100">
             {formulaCard.formulas?.map((formula, i) => (
-              <div key={i} className="bg-pearl rounded-lg p-4 border border-border">
-                <p className="mono-number text-base font-bold text-crimson mb-1">
+              <div key={i} className="bg-white border-[2.5px] border-brutalBlack p-5 shadow-brutal-sm">
+                <div className="font-mono text-xl sm:text-2xl font-black text-retroTeal-dark bg-paper-200 px-3 py-2 border-[2px] border-brutalBlack mb-4 inline-block shadow-brutal-sm">
                   {formula.expression}
-                </p>
-                <p className="text-sm text-obsidian mb-2">{formula.description}</p>
-                {formula.conditions && (
-                  <p className="text-xs text-sand-dark">
-                    <span className="font-semibold">When to use:</span> {formula.conditions}
-                  </p>
-                )}
-                {formula.commonMistake && (
-                  <p className="text-xs text-crimson-600 mt-1">
-                    ⚠️ {formula.commonMistake}
-                  </p>
-                )}
+                </div>
+                <p className="font-serif text-base font-bold text-brutalBlack mb-3">{formula.description}</p>
+                
+                <div className="space-y-2">
+                  {formula.conditions && (
+                    <div className="flex items-start gap-2 bg-schoolYellow/30 p-2 border-l-[3px] border-schoolYellow-deep">
+                      <span className="font-mono text-[10px] font-black uppercase pt-0.5">WHEN:</span>
+                      <span className="text-sm font-semibold">{formula.conditions}</span>
+                    </div>
+                  )}
+                  {formula.commonMistake && (
+                    <div className="flex items-start gap-2 bg-red-100 p-2 border-l-[3px] border-red-500 text-red-900">
+                      <span className="font-mono text-[10px] font-black uppercase pt-0.5 shrink-0">⚠️ TRAP:</span>
+                      <span className="text-sm font-semibold">{formula.commonMistake}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
-          </div>
 
-          {formulaCard.tips && formulaCard.tips.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-border">
-              <p className="text-xs uppercase tracking-widest text-obsidian-subtle mb-2 font-semibold">Quick Tips</p>
-              <ul className="space-y-1">
-                {formulaCard.tips.map((tip, i) => (
-                  <li key={i} className="text-sm text-obsidian flex items-start gap-2">
-                    <span className="text-sand mt-0.5">•</span>
-                    {tip}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            {formulaCard.tips && formulaCard.tips.length > 0 && (
+              <div className="mt-8 pt-6 border-t-[3px] border-dashed border-brutalBlack">
+                <p className="font-mono text-xs font-black uppercase tracking-wider text-brutalBlack mb-4 flex items-center gap-2">
+                  <span className="text-lg">💡</span> Tactical Tips
+                </p>
+                <ul className="space-y-3">
+                  {formulaCard.tips.map((tip, i) => (
+                    <li key={i} className="text-sm font-bold text-brutalBlack flex items-start gap-3">
+                      <span className="w-1.5 h-1.5 bg-brutalBlack rounded-full mt-1.5 shrink-0"></span>
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </section>
 
         {/* ─── Step 3: Resource ─── */}
-        <section className="card-elevated p-6 mb-6 animate-slide-up" style={{ animationDelay: '0.2s' }} id="resource">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 w-6 h-6 rounded-full flex items-center justify-center">
-              3
-            </span>
-            <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              Recommended Resource
-            </h2>
+        <section className="bg-white border-[3px] border-brutalBlack shadow-brutal animate-slide-up" style={{ animationDelay: '0.2s' }} id="resource">
+          <div className="bg-kraftBrown border-b-[3px] border-brutalBlack px-5 py-3 flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm bg-white text-kraftBrown px-2 py-1 font-black shadow-brutal-sm">03</span>
+              <h2 className="text-xl font-black uppercase tracking-tight">
+                Recommended Resource
+              </h2>
+            </div>
             {stack.resource && (
-              <span className="tag tag-sand text-xs ml-auto">
-                ~{Math.ceil(stack.resource.durationSeconds / 60)} min
+              <span className="font-mono text-[10px] font-black uppercase border-[1.5px] border-white px-2 py-0.5 text-white hidden sm:block">
+                ~{Math.ceil(stack.resource.durationSeconds / 60)} MIN
               </span>
             )}
           </div>
 
-          {stack.resource ? (
-            <div className="bg-pearl rounded-lg p-5 border border-border">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="tag tag-sand text-xs">{stack.resource.type.replace(/_/g, ' ')}</span>
-                    {!stack.resource.verified && (
-                      <span className="tag tag-unverified text-xs">⚠️ UNVERIFIED</span>
-                    )}
+          <div className="p-6 sm:p-8">
+            {stack.resource ? (
+              <div className="bg-paper-200 border-[2.5px] border-brutalBlack p-6 shadow-brutal">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className="font-mono text-[10px] font-black bg-white px-2 py-0.5 border border-brutalBlack uppercase">
+                        {stack.resource.type.replace(/_/g, ' ')}
+                      </span>
+                      {!stack.resource.verified && (
+                        <span className="font-mono text-[10px] font-black bg-red-200 text-red-900 px-2 py-0.5 border border-red-900 uppercase">
+                          ⚠️ UNVERIFIED SOURCE
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-xl font-black text-brutalBlack mb-2 uppercase leading-tight">
+                      {stack.resource.title}
+                    </h3>
+                    <p className="font-mono text-xs font-bold text-neutral-600 uppercase">
+                      SOURCE: {stack.resource.source} // {Math.ceil(stack.resource.durationSeconds / 60)} MIN
+                      {stack.resource.language !== 'en' && ` // ${stack.resource.language}`}
+                    </p>
                   </div>
-                  <h3 className="text-base font-semibold text-obsidian mb-1">
-                    {stack.resource.title}
-                  </h3>
-                  <p className="text-xs text-obsidian-subtle">
-                    Source: {stack.resource.source} · {Math.ceil(stack.resource.durationSeconds / 60)} min
-                    {stack.resource.language !== 'en' && ` · ${stack.resource.language}`}
-                  </p>
+                  
+                  {stack.resource.url && (
+                    <a
+                      href={stack.resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 bg-brutalBlack text-white hover:bg-neutral-800 font-mono text-xs font-black uppercase px-6 py-3 border-[2px] border-brutalBlack shadow-brutal-sm transition-colors text-center"
+                    >
+                      OPEN MODULE ↗
+                    </a>
+                  )}
                 </div>
+                {!stack.resource.url && (
+                  <div className="mt-4 bg-schoolYellow/30 border-l-[3px] border-schoolYellow-deep p-3 font-mono text-xs font-bold">
+                    [OFFLINE RESOURCE] Check your physical study material collection for this reference.
+                  </div>
+                )}
               </div>
-              {stack.resource.url && (
-                <a
-                  href={stack.resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-secondary text-xs mt-4 inline-block"
-                >
-                  Open Resource ↗
-                </a>
-              )}
-              {!stack.resource.url && (
-                <p className="text-xs text-obsidian-subtle mt-3 italic">
-                  This is an offline resource. Check your study material collection.
+            ) : (
+              <div className="bg-paper-200 border-[2.5px] border-brutalBlack p-6 shadow-brutal-sm text-center">
+                <p className="font-mono text-sm font-bold text-neutral-600 uppercase">
+                  No specific external resource mapped. Focus on the explanation and practice modules.
                 </p>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-obsidian-subtle">
-              No specific resource available for this concept. Focus on the explanation and practice.
-            </p>
-          )}
+              </div>
+            )}
+          </div>
         </section>
 
         {/* ─── Step 4: Practice ─── */}
-        <section className="card-elevated p-6 mb-6 animate-slide-up" style={{ animationDelay: '0.3s' }} id="practice">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 w-6 h-6 rounded-full flex items-center justify-center">
-              4
+        <section className="bg-white border-[3px] border-brutalBlack shadow-brutal animate-slide-up" style={{ animationDelay: '0.3s' }} id="practice">
+          <div className="bg-brutalBlack border-b-[3px] border-brutalBlack px-5 py-3 flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm bg-schoolYellow text-brutalBlack px-2 py-1 font-black shadow-brutal-sm">04</span>
+              <h2 className="text-xl font-black uppercase tracking-tight">
+                Practice Probes
+              </h2>
+            </div>
+            <span className="font-mono text-[10px] font-black uppercase border-[1.5px] border-white px-2 py-0.5 text-white hidden sm:block">
+              ~{practiceQuestions.length * 2} MIN
             </span>
-            <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              Practice Questions
-            </h2>
-            <span className="tag tag-sand text-xs ml-auto">~{practiceQuestions.length * 2} min</span>
           </div>
 
-          <PracticeSection
-            questions={practiceQuestions.map((q) => ({
-              id: q.id,
-              prompt: q.prompt,
-              options: JSON.parse(q.options) as string[],
-              correctOptionIndex: q.correctOptionIndex,
-              conceptName: q.concept.name,
-              commonMisconception: q.commonMisconception,
-            }))}
-          />
+          <div className="p-6 sm:p-8 bg-paper-100">
+            <PracticeSection
+              questions={practiceQuestions.map((q) => ({
+                id: q.id,
+                prompt: q.prompt,
+                options: JSON.parse(q.options) as string[],
+                correctOptionIndex: q.correctOptionIndex,
+                conceptName: q.concept.name,
+                commonMisconception: q.commonMisconception,
+              }))}
+            />
+          </div>
         </section>
 
         {/* ─── Step 5: Recheck CTA ─── */}
-        <div className="text-center py-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <p className="text-sm text-obsidian-subtle mb-4">
-            Done reviewing? Let&apos;s verify the fix worked.
+        <section className="bg-schoolYellow border-[3px] border-brutalBlack p-8 shadow-brutal text-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <span className="font-mono text-sm bg-white text-brutalBlack px-3 py-1 font-black shadow-brutal-sm border-[2px] border-brutalBlack mb-4 inline-block">05</span>
+          <h2 className="text-2xl font-black uppercase tracking-tight text-brutalBlack mb-3">
+            VERIFY REPAIR
+          </h2>
+          <p className="font-mono text-sm font-bold text-neutral-800 mb-6 uppercase">
+            Done reviewing? Let's test if the intuition fix holds under pressure.
           </p>
           <Link
             href={`/recovery/${stackId}/recheck`}
-            className="btn-primary text-base px-10 py-3.5 inline-block"
+            className="bg-brutalBlack text-white hover:bg-neutral-800 font-black text-lg px-8 py-4 border-[3px] border-brutalBlack shadow-brutal transition-colors btn-brutal uppercase inline-flex items-center gap-3"
           >
-            Ready for Recheck →
+            <span>COMMENCE RECHECK</span>
+            <span className="text-2xl leading-none font-black">➔</span>
           </Link>
-        </div>
+        </section>
+        
       </main>
     </div>
   );

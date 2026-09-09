@@ -76,13 +76,13 @@ export function RecheckQuiz({ stackId, questions }: Props) {
 
   if (questions.length === 0) {
     return (
-      <div className="card-elevated p-8 text-center">
-        <p className="text-obsidian-subtle mb-4">No recheck questions available for this concept.</p>
+      <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-8 text-center">
+        <p className="font-mono text-sm font-bold text-neutral-600 uppercase mb-6">No recheck questions available for this concept.</p>
         <button
           onClick={() => router.push(`/recovery/${stackId}`)}
-          className="btn-secondary"
+          className="bg-brutalBlack text-white hover:bg-neutral-800 font-mono text-sm font-black px-6 py-3 border-[2.5px] border-brutalBlack shadow-brutal-sm transition-colors uppercase btn-brutal"
         >
-          ← Back to Recovery Stack
+          ← ABORT TO RECOVERY STACK
         </button>
       </div>
     );
@@ -91,101 +91,112 @@ export function RecheckQuiz({ stackId, questions }: Props) {
   // ─── Show Result ───
   if (result) {
     return (
-      <div className="animate-fade-in">
-        <div className="card-elevated p-8 text-center mb-6">
-          <span className="tag tag-crimson text-xs uppercase tracking-widest mb-4 inline-block">
-            Recheck Result
+      <div className="animate-fade-in space-y-8">
+        <div className="bg-white border-[3px] border-brutalBlack shadow-brutal relative overflow-hidden text-center p-8 sm:p-12">
+          <div className={`absolute top-0 right-0 border-l-[3px] border-b-[3px] border-brutalBlack px-4 py-1.5 font-mono text-xs font-black uppercase tracking-wider ${result.passed ? 'bg-retroTeal text-white' : 'bg-red-500 text-white'}`}>
+            {result.passed ? 'VERIFICATION SUCCESS' : 'VERIFICATION FAILED'}
+          </div>
+
+          <span className="font-mono text-xs font-black uppercase tracking-widest mb-4 inline-block bg-paper-200 border border-brutalBlack px-2 py-0.5">
+            RECHECK AUDIT SCORE
           </span>
 
-          <div className={`mono-number text-6xl font-bold my-6 ${
-            result.passed ? 'text-mastery-high' : result.recheckScore >= 40 ? 'text-mastery-mid' : 'text-mastery-low'
+          <div className={`font-mono text-6xl sm:text-8xl font-black tracking-tight my-4 ${
+            result.passed ? 'text-retroTeal' : result.recheckScore >= 40 ? 'text-schoolYellow-deep' : 'text-red-600'
           }`}>
             {result.recheckScore}%
           </div>
 
-          <p className="text-sm text-obsidian-subtle mb-2">
-            {result.correct} of {result.total} correct
+          <p className="font-mono text-sm font-bold text-neutral-600 uppercase mb-6">
+            {result.correct} OF {result.total} VALIDATED
           </p>
 
           {result.passed ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
-              <p className="text-mastery-high font-semibold text-sm">
-                🎉 Concept gap fixed! Your mastery has been updated.
+            <div className="bg-retroTeal-soft border-[2.5px] border-retroTeal-dark text-retroTeal-dark p-5 mt-4 text-left max-w-xl mx-auto shadow-brutal-sm">
+              <p className="font-black text-base uppercase tracking-tight mb-1 flex items-center gap-2">
+                <span>🎉</span> CONCEPTUAL GAP FIXED
               </p>
-              <p className="text-xs text-obsidian-subtle mt-1">
-                This concept is now marked as recovered in your knowledge graph.
+              <p className="font-mono text-xs font-bold uppercase">
+                Your Knowledge Graph has been updated. This concept is now marked as recovered.
               </p>
             </div>
           ) : (
-            <div className="bg-crimson-50 border border-crimson-200 rounded-lg p-4 mt-4">
-              <p className="text-crimson font-semibold text-sm">
-                Not quite there yet. Review the recovery stack and try again.
+            <div className="bg-red-50 border-[2.5px] border-red-500 text-red-900 p-5 mt-4 text-left max-w-xl mx-auto shadow-brutal-sm">
+              <p className="font-black text-base uppercase tracking-tight mb-1 flex items-center gap-2">
+                <span>⚠️</span> REPAIR INCOMPLETE
               </p>
-              <p className="text-xs text-obsidian-subtle mt-1">
-                Your mastery has still improved slightly from the attempt.
+              <p className="font-mono text-xs font-bold uppercase">
+                Not quite there yet. Your mastery has improved slightly from the attempt, but the intuition is still shaky. Review the stack and try again.
               </p>
             </div>
           )}
         </div>
 
         {/* ─── Question Review ─── */}
-        <div className="card-elevated p-6 mb-6">
-          <h2 className="text-base font-bold text-obsidian font-[family-name:var(--font-serif)] mb-4">
-            Answer Review
-          </h2>
-          <div className="space-y-3">
-            {questions.map((q, i) => {
-              const selectedIdx = answers[q.id];
-              const isCorrect = selectedIdx === q.correctOptionIndex;
-              return (
-                <div
-                  key={q.id}
-                  className={`flex items-start gap-3 p-3 rounded-lg ${
-                    isCorrect ? 'bg-green-50' : 'bg-crimson-50'
-                  }`}
-                >
-                  <span
-                    className={`mono-number text-xs font-bold flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                      isCorrect ? 'bg-mastery-high text-white' : 'bg-crimson text-white'
+        <div className="bg-white border-[3px] border-brutalBlack shadow-brutal">
+          <div className="bg-brutalBlack text-white border-b-[3px] border-brutalBlack px-6 py-4">
+            <h2 className="text-xl font-black uppercase tracking-tight">Answer Review</h2>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              {questions.map((q, i) => {
+                const selectedIdx = answers[q.id];
+                const isCorrect = selectedIdx === q.correctOptionIndex;
+                return (
+                  <div
+                    key={q.id}
+                    className={`flex flex-col sm:flex-row sm:items-start gap-4 p-4 border-[2.5px] border-brutalBlack shadow-brutal-sm ${
+                      isCorrect ? 'bg-emerald-50' : 'bg-red-50'
                     }`}
                   >
-                    {i + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-obsidian mb-1 line-clamp-2">{q.prompt}</p>
-                    {!isCorrect && (
-                      <p className="text-xs text-crimson">
-                        Your answer: {String.fromCharCode(65 + selectedIdx)}) {q.options[selectedIdx]}
-                        <br />
-                        Correct: {String.fromCharCode(65 + q.correctOptionIndex)}) {q.options[q.correctOptionIndex]}
-                      </p>
-                    )}
+                    <span
+                      className={`font-mono text-sm font-black flex-shrink-0 w-8 h-8 flex items-center justify-center border-[2px] border-brutalBlack ${
+                        isCorrect ? 'bg-retroTeal text-white' : 'bg-red-500 text-white'
+                      }`}
+                    >
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-base font-bold text-brutalBlack mb-2 leading-snug">{q.prompt}</p>
+                      {!isCorrect && (
+                        <div className="font-mono text-xs font-bold space-y-1 mt-2 bg-white/50 p-2 border-[1.5px] border-brutalBlack">
+                          <p className="text-red-700 break-words">
+                            <span className="bg-red-200 px-1 border border-red-700 mr-2 inline-block mb-1">YOUR ANSWER</span> 
+                            {String.fromCharCode(65 + selectedIdx)}) {q.options[selectedIdx]}
+                          </p>
+                          <p className="text-emerald-700 break-words">
+                            <span className="bg-emerald-200 px-1 border border-emerald-700 mr-2 inline-block">CORRECT</span>
+                            {String.fromCharCode(65 + q.correctOptionIndex)}) {q.options[q.correctOptionIndex]}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xl shrink-0 self-end sm:self-start">{isCorrect ? '✓' : '✗'}</span>
                   </div>
-                  <span className="text-sm flex-shrink-0">{isCorrect ? '✓' : '✗'}</span>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* ─── CTAs ─── */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 py-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           {result.passed ? (
             <>
-              <button onClick={() => router.push('/topics')} className="btn-primary px-8 py-3">
-                Diagnose Another Topic →
+              <button onClick={() => router.push('/topics')} className="w-full sm:w-auto bg-brutalBlack text-white hover:bg-neutral-800 font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                DIAGNOSE ANOTHER TOPIC ➔
               </button>
-              <button onClick={() => router.push('/progress')} className="btn-secondary px-8 py-3">
-                View Progress
+              <button onClick={() => router.push('/progress')} className="w-full sm:w-auto bg-white text-brutalBlack hover:bg-paper-200 font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                VIEW PROGRESS LOG
               </button>
             </>
           ) : (
             <>
-              <button onClick={() => router.push(`/recovery/${stackId}`)} className="btn-primary px-8 py-3">
-                ← Review Recovery Stack
+              <button onClick={() => router.push(`/recovery/${stackId}`)} className="w-full sm:w-auto bg-schoolYellow text-brutalBlack hover:bg-schoolYellow-deep font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                ← REVIEW RECOVERY STACK
               </button>
-              <button onClick={() => router.push('/topics')} className="btn-secondary px-8 py-3">
-                Try Another Topic
+              <button onClick={() => router.push('/topics')} className="w-full sm:w-auto bg-white text-brutalBlack hover:bg-paper-200 font-black px-8 py-4 border-[3px] border-brutalBlack shadow-brutal btn-brutal uppercase text-sm">
+                TRY ANOTHER TOPIC
               </button>
             </>
           )}
@@ -197,24 +208,21 @@ export function RecheckQuiz({ stackId, questions }: Props) {
   // ─── Submission Skeleton ───
   if (isSubmitting) {
     return (
-      <div className="card-elevated p-8 text-center animate-fade-in">
-        <span className="tag tag-crimson text-xs uppercase tracking-widest mb-3 inline-block">
-          Verifying Fix
-        </span>
-        <h2 className="text-xl font-bold text-obsidian font-[family-name:var(--font-serif)] mb-4">
-          Checking your understanding...
-        </h2>
-        <div className="space-y-3 max-w-sm mx-auto mb-6">
-          <div className="skeleton-box h-4 w-4/5 mx-auto rounded" />
-          <div className="skeleton-box h-3 w-3/5 mx-auto rounded" />
-          <div className="skeleton-box h-3 w-2/5 mx-auto rounded" />
-        </div>
-        <div className="flex items-center justify-center gap-2 text-xs text-obsidian-subtle">
-          <svg className="animate-spin w-4 h-4 text-crimson" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <span>Updating knowledge graph...</span>
+      <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-8 sm:p-12 text-center animate-fade-in relative overflow-hidden">
+        <div className="absolute inset-0 skeleton-box opacity-50 z-0"></div>
+        <div className="relative z-10 space-y-6 max-w-xl mx-auto">
+          <span className="font-mono text-xs font-black uppercase text-white bg-brutalBlack px-3 py-1 border-[2px] border-brutalBlack">
+            VERIFYING FIX
+          </span>
+          <h2 className="text-3xl font-black text-brutalBlack tracking-tight">
+            Checking your understanding...
+          </h2>
+          <div className="flex justify-center mt-8">
+            <div className="w-16 h-16 border-[4px] border-paper-200 border-t-brutalBlack rounded-full animate-spin"></div>
+          </div>
+          <div className="font-mono text-xs font-bold text-neutral-600 uppercase animate-pulse pt-4">
+            UPDATING KNOWLEDGE GRAPH...
+          </div>
         </div>
       </div>
     );
@@ -223,92 +231,127 @@ export function RecheckQuiz({ stackId, questions }: Props) {
   // ─── Quiz UI ───
   return (
     <div className="animate-fade-in" key={currentQuestion.id}>
-      {/* Progress */}
-      <div className="flex gap-1.5 mb-8">
-        {questions.map((q, i) => (
-          <div
-            key={q.id}
-            className={`h-1.5 flex-1 rounded-full transition-all ${
-              i < currentIndex
-                ? 'bg-crimson'
-                : i === currentIndex
-                ? 'bg-crimson-400'
-                : answers[q.id] !== undefined
-                ? 'bg-sand-300'
-                : 'bg-pearl-dark'
-            }`}
-          />
-        ))}
+      
+      {/* ─── Top Control & Progress Strip ─── */}
+      <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col gap-2 w-full sm:w-1/2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="bg-retroTeal text-white text-[11px] font-mono px-2 py-0.5 font-bold uppercase tracking-wider border border-brutalBlack">
+                RECHECK 0{currentIndex + 1} / 0{questions.length}
+              </span>
+              <span className="font-mono text-[10px] font-extrabold text-neutral-600 uppercase tracking-tight truncate max-w-[200px] sm:max-w-none">
+                {currentQuestion.conceptName}
+              </span>
+            </div>
+            <span className="font-mono text-xs font-black text-brutalBlack hidden md:block">
+              {Math.round((currentIndex / questions.length) * 100)}% COMPLETED
+            </span>
+          </div>
+          <div className="grid grid-cols-5 gap-1.5 w-full h-3.5 bg-paper-200 p-0.5 border-[2px] border-brutalBlack">
+            {questions.map((q, i) => (
+              <div
+                key={q.id}
+                className={`h-full border border-brutalBlack transition-all ${
+                  i < currentIndex
+                    ? 'bg-retroTeal'
+                    : i === currentIndex
+                    ? 'bg-schoolYellow animate-pulse'
+                    : answers[q.id] !== undefined
+                    ? 'bg-kraftBrown'
+                    : 'bg-white'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Question Card */}
-      <div className="card-elevated p-6 mb-6">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="mono-number text-xs text-crimson font-bold bg-crimson-50 px-2.5 py-1 rounded-md">
-            R{currentIndex + 1}/{questions.length}
-          </span>
-          <span className="text-xs text-obsidian-subtle">{currentQuestion.conceptName}</span>
+      {/* ─── Main Question Workspace ─── */}
+      <div className="bg-white border-[3px] border-brutalBlack shadow-brutal relative overflow-hidden mb-8">
+        {/* Left Column: Physical Clipboard Effect */}
+        <div className="p-6 sm:p-8 bg-paper-100 border-b-[3px] border-brutalBlack relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-3.5 bg-paper-200 border-b-[2.5px] border-x-[2.5px] border-brutalBlack flex items-center justify-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-brutalBlack"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-brutalBlack"></span>
+          </div>
+          <div className="absolute left-4 top-0 bottom-0 w-[2.5px] bg-red-500/80"></div>
+          
+          <div className="pl-4 sm:pl-6 space-y-4 pt-4">
+            <span className="font-mono text-xs font-extrabold text-kraftBrown tracking-wider uppercase flex items-center gap-1.5">
+              <span>⚡</span> PROBLEM STATEMENT
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-brutalBlack leading-relaxed font-serif whitespace-pre-wrap">
+              {currentQuestion.prompt}
+            </h2>
+          </div>
         </div>
 
-        <h2 className="text-lg font-semibold text-obsidian leading-relaxed mb-6 font-[family-name:var(--font-serif)]">
-          {currentQuestion.prompt}
-        </h2>
-
-        <div className="space-y-3 mb-6">
+        {/* Right Column: Brutalist Answer Tiles */}
+        <div className="p-6 sm:p-8 space-y-3 bg-white">
           {currentQuestion.options.map((option, i) => {
             const isSelected = answers[currentQuestion.id] === i;
             return (
               <button
                 key={i}
                 onClick={() => handleSelect(i)}
-                className={`w-full text-left px-5 py-3.5 rounded-lg border transition-all cursor-pointer
-                  ${
-                    isSelected
-                      ? 'border-crimson bg-crimson-50 text-obsidian'
-                      : 'border-border bg-white hover:border-sand hover:bg-pearl-warm text-obsidian'
-                  }
-                `}
+                className={`w-full text-left p-4 border-[2.5px] border-brutalBlack shadow-brutal flex items-center justify-between cursor-pointer group transition-colors ${
+                  isSelected ? 'bg-retroTeal-soft border-retroTeal-dark' : 'bg-white hover:bg-paper-200'
+                }`}
               >
-                <div className="flex items-start gap-3">
-                  <span
-                    className={`mono-number text-sm font-semibold mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center
-                      ${isSelected ? 'bg-crimson text-white' : 'bg-pearl-dark text-obsidian-subtle'}
-                    `}
-                  >
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 border-[2px] border-brutalBlack flex items-center justify-center font-mono text-base font-black shrink-0 transition-colors ${
+                    isSelected ? 'bg-retroTeal text-white shadow-brutal-sm' : 'bg-paper-200 text-brutalBlack group-hover:bg-schoolYellow'
+                  }`}>
                     {String.fromCharCode(65 + i)}
-                  </span>
-                  <span className="text-sm leading-relaxed">{option}</span>
+                  </div>
+                  <div className="font-serif text-[15px] font-bold text-brutalBlack tracking-wide leading-tight pr-4">
+                    {option}
+                  </div>
                 </div>
+                
+                {isSelected && (
+                  <div className="flex items-center gap-1.5 bg-white text-retroTeal-dark font-mono text-[10px] font-black px-2 py-1 border-[1.5px] border-brutalBlack shadow-brutal-sm shrink-0">
+                    <span className="material-symbols-outlined text-sm font-black">check</span>
+                    <span className="hidden sm:inline">SELECTED</span>
+                  </div>
+                )}
               </button>
             );
           })}
         </div>
+      </div>
 
-        {error && (
-          <div className="bg-crimson-50 border border-crimson-200 rounded-lg px-4 py-3 mb-4">
-            <p className="text-sm text-crimson">{error}</p>
-          </div>
-        )}
-
-        <div className="flex justify-end">
-          {!isLastQuestion ? (
-            <button
-              onClick={handleNext}
-              disabled={!hasAnswered}
-              className={`btn-primary ${!hasAnswered ? 'opacity-40 cursor-not-allowed' : ''}`}
-            >
-              Next →
-            </button>
-          ) : (
-            <button
-              onClick={handleSubmit}
-              disabled={!hasAnswered}
-              className={`btn-primary px-8 ${!hasAnswered ? 'opacity-40 cursor-not-allowed' : ''}`}
-            >
-              Submit Recheck →
-            </button>
-          )}
+      {error && (
+        <div className="bg-red-50 border-[3px] border-red-500 p-4 mb-6 shadow-brutal-sm">
+          <p className="font-mono text-sm font-bold text-red-700 uppercase">ERROR: {error}</p>
         </div>
+      )}
+
+      {/* ─── Actions ─── */}
+      <div className="flex justify-end">
+        {!isLastQuestion ? (
+          <button
+            onClick={handleNext}
+            disabled={!hasAnswered}
+            className={`bg-brutalBlack text-white font-black text-sm px-8 py-4 border-[3px] border-brutalBlack shadow-brutal uppercase transition-colors btn-brutal ${
+              !hasAnswered ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-800'
+            }`}
+          >
+            NEXT PROBE ➔
+          </button>
+        ) : (
+          <button
+            onClick={handleSubmit}
+            disabled={!hasAnswered}
+            className={`bg-schoolYellow text-brutalBlack font-black text-sm px-8 py-4 border-[3px] border-brutalBlack shadow-brutal uppercase transition-colors btn-brutal flex items-center gap-2 ${
+              !hasAnswered ? 'opacity-50 cursor-not-allowed' : 'hover:bg-schoolYellow-deep'
+            }`}
+          >
+            <span>SUBMIT RECHECK</span>
+            <span className="text-xl leading-none">➔</span>
+          </button>
+        )}
       </div>
     </div>
   );

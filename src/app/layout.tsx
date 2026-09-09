@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Newsreader, JetBrains_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { ChatWidget } from "@/components/ChatWidget";
 
-const playfair = Playfair_Display({
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const newsreader = Newsreader({
   variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
 });
 
-const inter = Inter({
-  variable: "--font-grotesk",
+const caveat = Caveat({
+  variable: "--font-script",
   subsets: ["latin"],
   display: "swap",
 });
@@ -34,9 +40,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${spaceGrotesk.variable} ${newsreader.variable} ${caveat.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col antialiased">
+      <body className="min-h-screen border-t-4 border-brutalBlack selection:bg-schoolYellow selection:text-brutalBlack flex flex-col antialiased">
         <Suspense fallback={null}>
           <NavigationProgress />
         </Suspense>

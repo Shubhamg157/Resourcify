@@ -1,51 +1,25 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Header } from '@/components/Header';
 
 export default function RecheckLoading() {
   return (
-    <div className="min-h-screen bg-pearl">
-      <header className="bg-white border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Skeleton className="h-4 w-36" />
-          <Skeleton variant="rounded" className="w-7 h-7 bg-crimson/20" />
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col bg-pearl">
+      <Header />
 
-      <main className="max-w-3xl mx-auto px-6 py-8 animate-fade-in">
-        <div className="mb-8 space-y-3">
-          <Skeleton className="h-5 w-24 rounded-full" />
-          <Skeleton className="h-9 w-72 max-w-full" />
-          <Skeleton className="h-4 w-60" />
-          <Skeleton className="h-4 w-80 max-w-full" />
-        </div>
+      <div className="bg-schoolYellow border-b-[3px] border-brutalBlack sticky top-0 z-40 shadow-brutal-sm h-12"></div>
 
-        {/* Progress bar skeleton */}
-        <div className="flex gap-1.5 mb-8">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-1.5 flex-1 rounded-full" />
-          ))}
-        </div>
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8 flex-grow animate-pulse">
+        {/* Title Skeleton */}
+        <section className="bg-white border-[3px] border-brutalBlack p-6 sm:p-8 shadow-brutal relative h-40">
+          <div className="absolute top-0 right-0 h-8 w-40 bg-paper-200 border-l-[3px] border-b-[3px] border-brutalBlack"></div>
+        </section>
 
-        {/* Question card skeleton */}
-        <div className="card-elevated p-6 border border-border bg-white rounded-xl space-y-5">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-6 w-16 rounded-md" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-5 w-full" />
-            <Skeleton className="h-5 w-4/5" />
-          </div>
-          <div className="space-y-3">
-            {[0, 1, 2, 3].map((opt) => (
-              <div key={opt} className="flex items-center gap-3 p-3.5 rounded-lg border border-border bg-sand-50/30">
-                <Skeleton variant="circular" className="w-6 h-6 flex-shrink-0" />
-                <Skeleton className="h-4 w-3/4" />
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-end pt-2">
-            <Skeleton className="h-10 w-32 rounded-lg" />
-          </div>
+        {/* Quiz UI Skeleton */}
+        <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-4 sm:p-5 h-24 mb-6"></div>
+
+        <div className="bg-white border-[3px] border-brutalBlack shadow-brutal h-96 mb-8"></div>
+
+        <div className="flex justify-end">
+          <div className="h-14 w-40 bg-white border-[3px] border-brutalBlack shadow-brutal"></div>
         </div>
       </main>
     </div>

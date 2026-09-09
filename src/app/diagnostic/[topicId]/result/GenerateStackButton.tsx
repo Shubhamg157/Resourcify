@@ -6,14 +6,20 @@ import { useRouter } from 'next/navigation';
 interface Props {
   sessionId: string;
   topicId: string;
+  existingStackId?: string;
 }
 
-export function GenerateStackButton({ sessionId, topicId }: Props) {
+export function GenerateStackButton({ sessionId, topicId, existingStackId }: Props) {
   const router = useRouter();
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
+    if (existingStackId) {
+      router.push(`/recovery/${existingStackId}`);
+      return;
+    }
+
     setIsGenerating(true);
     setError(null);
 
@@ -38,49 +44,29 @@ export function GenerateStackButton({ sessionId, topicId }: Props) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full sm:w-auto relative">
       <button
         onClick={handleGenerate}
         disabled={isGenerating}
-        className={`btn-primary text-base px-10 py-3.5 w-full sm:w-auto ${
-          isGenerating ? 'opacity-70 cursor-not-allowed' : ''
-        }`}
+        className={`w-full sm:w-auto bg-schoolYellow hover:bg-schoolYellow-deep text-brutalBlack font-black font-mono text-sm px-6 py-4 border-[3px] border-brutalBlack shadow-brutal inline-flex items-center justify-center gap-2 tracking-wide uppercase ${isGenerating ? 'opacity-70 cursor-not-allowed' : 'btn-brutal'}`}
       >
         {isGenerating ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Assembling Recovery Stack...
-          </span>
+          <>
+            <div className="w-5 h-5 border-[3px] border-brutalBlack border-t-transparent rounded-full animate-spin"></div>
+            <span>ASSEMBLING RECOVERY...</span>
+          </>
         ) : (
-          'Fix This Now →'
+          <>
+            <span>{existingStackId ? 'OPEN RECOVERY STACK' : 'GENERATE RECOVERY STACK (3 MICRO-ARTIFACTS)'}</span>
+            <span className="text-lg">➔</span>
+          </>
         )}
       </button>
 
-      {isGenerating && (
-        <div className="mt-6 p-4 rounded-xl border border-border bg-white text-left space-y-3 animate-fade-in">
-          <div className="flex items-center justify-between text-xs text-obsidian-subtle">
-            <span className="font-medium text-crimson animate-pulse">
-              Curating targeted explanation &amp; formulas...
-            </span>
-            <span>~15 min fix</span>
-          </div>
-          <div className="space-y-2">
-            <div className="skeleton-box h-4 w-5/6 rounded" />
-            <div className="skeleton-box h-3 w-4/6 rounded" />
-          </div>
-          <div className="grid grid-cols-3 gap-2 pt-1">
-            <div className="skeleton-box h-8 rounded-lg" />
-            <div className="skeleton-box h-8 rounded-lg" />
-            <div className="skeleton-box h-8 rounded-lg" />
-          </div>
-        </div>
-      )}
-
       {error && (
-        <p className="text-sm text-crimson mt-3">{error}</p>
+        <div className="absolute top-full mt-4 left-0 w-full bg-red-50 p-2 border-[2px] border-red-500 text-xs font-bold text-red-700">
+          {error}
+        </div>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db';
-import Link from 'next/link';
 import { TopicSelector } from './TopicSelector';
+import { Header } from '@/components/Header';
 
 export const metadata = {
   title: 'Select Topic — GapZero',
@@ -30,44 +30,29 @@ export default async function TopicsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-pearl">
-      {/* ─── Header ─── */}
-      <header className="border-b border-border bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
-            </div>
-            <span className="text-base font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              GapZero
+    <>
+      <Header />
+      
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* ─── Page Title ─── */}
+        <div className="mb-8 border-l-[6px] border-brutalBlack pl-4 py-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-schoolYellow text-brutalBlack font-mono font-black text-xs px-2 py-0.5 border border-brutalBlack uppercase">
+              TRIAGE BLUEPRINT
             </span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-obsidian-subtle hover:text-obsidian transition-colors">
-              Dashboard
-            </Link>
-            <Link href="/progress" className="text-sm text-obsidian-subtle hover:text-obsidian transition-colors">
-              Progress
-            </Link>
+            <span className="font-mono text-xs font-bold text-neutral-500 uppercase">Micro Diagnostic</span>
           </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-brutalBlack tracking-tight">
+            Choose a Topic
+          </h1>
+          <p className="text-neutral-700 font-bold text-sm sm:text-base mt-2 max-w-2xl">
+            Select a topic to take a 12-minute diagnostic probe. We'll locate your exact conceptual gap.
+          </p>
         </div>
-      </header>
 
-      {/* ─── Page Title ─── */}
-      <div className="max-w-6xl mx-auto px-6 pt-8 pb-4">
-        <div className="mb-1">
-          <span className="tag tag-sand text-xs uppercase tracking-widest">Micro Diagnostic</span>
-        </div>
-        <h1 className="text-3xl font-bold text-obsidian font-[family-name:var(--font-serif)] mb-2">
-          Choose a <span className="crimson-underline text-crimson">Topic</span>
-        </h1>
-        <p className="text-sm text-obsidian-subtle">
-          Select a topic to take a 5-question diagnostic. We&apos;ll find your exact conceptual gap.
-        </p>
-      </div>
-
-      {/* ─── Topic Selector (Client Component) ─── */}
-      <TopicSelector subjects={subjects} />
-    </div>
+        {/* ─── Topic Selector (Client Component) ─── */}
+        <TopicSelector subjects={subjects} />
+      </main>
+    </>
   );
 }

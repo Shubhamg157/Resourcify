@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import Link from 'next/link';
 import { DEMO_USER_ID } from '@/types';
+import { Header } from '@/components/Header';
 
 export const metadata = {
   title: 'Dashboard — GapZero',
@@ -87,37 +88,34 @@ export default async function DashboardPage() {
   const totalActiveMinutes = activeStacks.reduce((s, st) => s + st.estimatedMinutes, 0);
 
   return (
-    <div className="min-h-screen bg-pearl">
-      {/* ─── Header ─── */}
-      <header className="border-b border-border bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-crimson rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs font-[family-name:var(--font-serif)]">G</span>
-            </div>
-            <span className="text-base font-bold text-obsidian font-[family-name:var(--font-serif)]">
-              GapZero
-            </span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/topics" className="text-sm text-obsidian-subtle hover:text-obsidian transition-colors">
-              Topics
-            </Link>
-            <Link href="/progress" className="text-sm text-obsidian-subtle hover:text-obsidian transition-colors">
-              Progress
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8 flex-grow">
+        {/* ─── Top Context Ribbon ─── */}
+        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-[2.5px] border-brutalBlack pb-4 animate-fade-in">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs font-black bg-brutalBlack text-white px-2.5 py-1 border-[2px] border-brutalBlack shadow-brutal-sm uppercase">
+              STUDENT TERMINAL
+            </span>
+            <span className="font-mono text-xs font-bold text-neutral-600 bg-paper-200 px-2.5 py-1 border-[2px] border-brutalBlack uppercase">
+              COHORT 2027
+            </span>
+          </div>
+          <div className="text-xs font-mono font-bold text-neutral-600 uppercase">
+            STATUS: ACTIVE TRACKING
+          </div>
+        </section>
+
         {/* ─── Welcome ─── */}
-        <div className="mb-8 animate-fade-in">
-          <span className="tag tag-sand text-xs uppercase tracking-widest mb-2 inline-block">Dashboard</span>
-          <h1 className="text-3xl font-bold text-obsidian font-[family-name:var(--font-serif)] mb-2">
-            Welcome <span className="crimson-underline text-crimson">Back</span>
+        <div className="bg-white border-[3px] border-brutalBlack p-6 sm:p-8 shadow-brutal relative overflow-hidden animate-fade-in">
+          <div className="absolute top-0 right-0 bg-schoolYellow border-l-[3px] border-b-[3px] border-brutalBlack px-4 py-1.5 font-mono text-xs font-black uppercase tracking-wider">
+            ANALYTICAL DASHBOARD
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brutalBlack tracking-tight leading-tight mt-2">
+            Welcome <span className="bg-schoolYellow px-2 py-0.5 border-[2px] border-brutalBlack shadow-brutal-sm inline-block">Back</span>
           </h1>
-          <p className="text-sm text-obsidian-subtle">
+          <p className="text-base sm:text-lg font-semibold text-neutral-800 leading-relaxed pt-2">
             {activeStacks.length > 0
               ? `You have ${activeStacks.length} active recovery stack${activeStacks.length > 1 ? 's' : ''} (~${totalActiveMinutes} min remaining).`
               : 'Start a diagnostic to find your conceptual gaps.'}
@@ -125,69 +123,79 @@ export default async function DashboardPage() {
         </div>
 
         {/* ─── KPI Cards ─── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-slide-up">
-          <div className="card-elevated p-5 text-center">
-            <p className="text-xs uppercase tracking-widest text-obsidian-subtle mb-1">Mastery</p>
-            <p className={`mono-number text-3xl font-bold ${
-              avgMastery >= 70 ? 'text-mastery-high' : avgMastery >= 40 ? 'text-mastery-mid' : totalConcepts > 0 ? 'text-mastery-low' : 'text-obsidian'
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-slide-up">
+          <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-5 text-center flex flex-col justify-between">
+            <div className="font-mono text-xs font-black uppercase text-neutral-600 bg-paper-200 px-2 py-0.5 border-[1.5px] border-brutalBlack mx-auto w-fit">
+              Mastery Score
+            </div>
+            <p className={`font-mono text-4xl font-black mt-4 ${
+              avgMastery >= 70 ? 'text-retroTeal' : avgMastery >= 40 ? 'text-schoolYellow-deep' : totalConcepts > 0 ? 'text-red-600' : 'text-brutalBlack'
             }`}>
               {totalConcepts > 0 ? `${avgMastery}%` : '—'}
             </p>
           </div>
-          <div className="card-elevated p-5 text-center">
-            <p className="text-xs uppercase tracking-widest text-obsidian-subtle mb-1">Diagnostics</p>
-            <p className="mono-number text-3xl font-bold text-obsidian">{totalDiagnostics}</p>
+          <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-5 text-center flex flex-col justify-between">
+            <div className="font-mono text-xs font-black uppercase text-neutral-600 bg-paper-200 px-2 py-0.5 border-[1.5px] border-brutalBlack mx-auto w-fit">
+              Diagnostics Run
+            </div>
+            <p className="font-mono text-4xl font-black text-brutalBlack mt-4">{totalDiagnostics}</p>
           </div>
-          <div className="card-elevated p-5 text-center">
-            <p className="text-xs uppercase tracking-widest text-obsidian-subtle mb-1">Gaps Fixed</p>
-            <p className="mono-number text-3xl font-bold text-mastery-high">{totalStacksCompleted}</p>
+          <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-5 text-center flex flex-col justify-between">
+            <div className="font-mono text-xs font-black uppercase text-neutral-600 bg-paper-200 px-2 py-0.5 border-[1.5px] border-brutalBlack mx-auto w-fit">
+              Gaps Fixed
+            </div>
+            <p className="font-mono text-4xl font-black text-retroTeal mt-4">{totalStacksCompleted}</p>
           </div>
-          <div className="card-elevated p-5 text-center">
-            <p className="text-xs uppercase tracking-widest text-obsidian-subtle mb-1">Concepts</p>
-            <p className="mono-number text-3xl font-bold text-obsidian">{totalConcepts}</p>
+          <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-5 text-center flex flex-col justify-between">
+            <div className="font-mono text-xs font-black uppercase text-neutral-600 bg-paper-200 px-2 py-0.5 border-[1.5px] border-brutalBlack mx-auto w-fit">
+              Indexed Concepts
+            </div>
+            <p className="font-mono text-4xl font-black text-brutalBlack mt-4">{totalConcepts}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ─── Left Column: Today's Route ─── */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* ─── Left Column (8 cols): Today's Route ─── */}
+          <div className="lg:col-span-8 space-y-8">
             {/* Active Recovery Stacks */}
-            <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)] mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-crimson" />
-                Today&apos;s Route
-              </h2>
+            <div className="animate-slide-up">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">📍</span>
+                <h2 className="text-xl font-black text-brutalBlack uppercase tracking-tight">Today's Route</h2>
+              </div>
 
               {activeStacks.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {activeStacks.map((stack) => (
                     <Link
                       key={stack.id}
                       href={`/recovery/${stack.id}`}
-                      className="card p-5 flex items-center justify-between group"
+                      className="bg-white border-[3px] border-brutalBlack shadow-brutal p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:translate-y-[-2px] hover:translate-x-[-2px] transition-transform cursor-pointer"
                     >
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-obsidian group-hover:text-crimson transition-colors">
+                      <div className="min-w-0 flex-1 space-y-1.5 mb-3 sm:mb-0">
+                        <p className="text-lg font-black text-brutalBlack group-hover:text-retroTeal-dark transition-colors uppercase">
                           Fix: {stack.concept.name}
                         </p>
-                        <p className="text-xs text-obsidian-subtle truncate">
-                          {stack.concept.subtopic.topic.chapter.subject.name} → {stack.concept.subtopic.topic.chapter.name} → {stack.concept.subtopic.topic.name}
+                        <p className="font-mono text-xs font-bold text-neutral-600 truncate uppercase">
+                          {stack.concept.subtopic.topic.chapter.subject.name} // {stack.concept.subtopic.topic.chapter.name}
                         </p>
                       </div>
-                      <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                        <span className="mono-number text-xs text-sand bg-sand-50 px-2.5 py-1 rounded-full">
-                          ~{stack.estimatedMinutes} min
+                      <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                        <span className="font-mono text-xs font-black text-brutalBlack bg-schoolYellow px-2.5 py-1 border-[2px] border-brutalBlack uppercase shadow-brutal-sm">
+                          ~{stack.estimatedMinutes} MIN
                         </span>
-                        <span className="text-crimson text-sm group-hover:translate-x-1 transition-transform">→</span>
+                        <span className="bg-brutalBlack text-white w-8 h-8 flex items-center justify-center font-black group-hover:bg-retroTeal transition-colors border-[2px] border-brutalBlack">
+                          ➔
+                        </span>
                       </div>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <div className="card-elevated p-8 text-center">
-                  <p className="text-sm text-obsidian-subtle mb-4">No active recovery stacks.</p>
-                  <Link href="/topics" className="btn-primary px-6 py-2.5">
-                    Start a Diagnostic →
+                <div className="bg-white border-[3px] border-brutalBlack shadow-brutal p-8 text-center">
+                  <p className="font-mono text-sm font-bold text-neutral-600 uppercase mb-4">No active recovery stacks.</p>
+                  <Link href="/topics" className="bg-brutalBlack text-white font-black px-6 py-3 border-[2.5px] border-brutalBlack shadow-brutal btn-brutal uppercase inline-block">
+                    START A DIAGNOSTIC ➔
                   </Link>
                 </div>
               )}
@@ -195,28 +203,28 @@ export default async function DashboardPage() {
 
             {/* Recent Diagnostics */}
             {recentSessions.length > 0 && (
-              <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                <h2 className="text-lg font-bold text-obsidian font-[family-name:var(--font-serif)] mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-sand" />
-                  Recent Diagnostics
-                </h2>
-                <div className="space-y-2">
+              <div className="animate-slide-up">
+                <div className="flex items-center gap-2 mb-4 pt-2">
+                  <span className="text-xl">🗂️</span>
+                  <h2 className="text-xl font-black text-brutalBlack uppercase tracking-tight">Recent Diagnostics</h2>
+                </div>
+                <div className="space-y-3">
                   {recentSessions.map((session) => (
                     <Link
                       key={session.id}
                       href={`/diagnostic/${session.topicId}/result?sessionId=${session.id}`}
-                      className="card p-4 flex items-center justify-between group"
+                      className="bg-paper-100 border-[2.5px] border-brutalBlack p-4 flex flex-col sm:flex-row sm:items-center justify-between group hover:bg-white transition-colors"
                     >
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-obsidian group-hover:text-crimson transition-colors truncate">
+                      <div className="min-w-0 flex-1 mb-2 sm:mb-0">
+                        <p className="text-base font-black text-brutalBlack group-hover:underline uppercase">
                           {session.topic.name}
                         </p>
-                        <p className="text-xs text-obsidian-subtle">
-                          {session.topic.chapter.subject.name} · {new Date(session.createdAt).toLocaleDateString()}
+                        <p className="font-mono text-[10px] font-bold text-neutral-500 uppercase mt-1">
+                          {session.topic.chapter.subject.name} • {new Date(session.createdAt).toLocaleDateString()}
                         </p>
                       </div>
-                      <span className={`mono-number text-lg font-bold flex-shrink-0 ml-4 ${
-                        session.overallScore >= 70 ? 'text-mastery-high' : session.overallScore >= 40 ? 'text-mastery-mid' : 'text-mastery-low'
+                      <span className={`font-mono text-lg font-black flex-shrink-0 sm:ml-4 px-2 py-0.5 border-[2px] border-brutalBlack w-fit ${
+                        session.overallScore >= 70 ? 'bg-retroTeal-soft text-retroTeal-dark' : session.overallScore >= 40 ? 'bg-schoolYellow text-brutalBlack' : 'bg-red-100 text-red-700'
                       }`}>
                         {session.overallScore}%
                       </span>
@@ -227,34 +235,30 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          {/* ─── Right Column: Weak Concepts + Recent Wins ─── */}
-          <div className="space-y-6">
+          {/* ─── Right Column (4 cols): Weak Concepts + Recent Wins ─── */}
+          <div className="lg:col-span-4 space-y-6">
+            
             {/* Weak Concepts */}
             {weakConcepts.length > 0 && (
-              <div className="card-elevated p-5 animate-slide-up" style={{ animationDelay: '0.15s' }}>
-                <h3 className="text-base font-bold text-crimson font-[family-name:var(--font-serif)] mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-mastery-low" />
-                  Needs Attention
+              <div className="bg-white border-[3px] border-brutalBlack p-5 shadow-brutal animate-slide-up relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-full bg-red-500 border-l-[3px] border-brutalBlack"></div>
+                <h3 className="text-sm font-black text-brutalBlack uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <span>⚠️</span> NEEDS ATTENTION
                 </h3>
-                <div className="space-y-2.5">
+                <div className="space-y-4 pr-3">
                   {weakConcepts.map((ks) => (
-                    <div key={ks.id} className="flex items-center justify-between">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-obsidian truncate">{ks.concept.name}</p>
-                        <p className="text-xs text-obsidian-subtle truncate">
-                          {ks.concept.subtopic.topic.chapter.name}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                        <div className="w-12 h-1.5 rounded-full bg-pearl-dark overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-mastery-low transition-all"
-                            style={{ width: `${ks.masteryPercent}%` }}
-                          />
-                        </div>
-                        <span className="mono-number text-xs text-mastery-low font-bold w-7 text-right">
+                    <div key={ks.id} className="flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-black text-brutalBlack uppercase truncate pr-2">{ks.concept.name}</p>
+                        <span className="font-mono text-[10px] font-black text-red-600 bg-red-50 px-1 border border-brutalBlack shrink-0">
                           {ks.masteryPercent}%
                         </span>
+                      </div>
+                      <div className="w-full h-2.5 bg-paper-200 border-[1.5px] border-brutalBlack p-[1px]">
+                        <div
+                          className="h-full bg-red-500 border border-brutalBlack"
+                          style={{ width: `${ks.masteryPercent}%` }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -264,17 +268,17 @@ export default async function DashboardPage() {
 
             {/* Recent Wins */}
             {completedStacks.length > 0 && (
-              <div className="card-elevated p-5 animate-slide-up" style={{ animationDelay: '0.25s' }}>
-                <h3 className="text-base font-bold text-mastery-high font-[family-name:var(--font-serif)] mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-mastery-high" />
-                  Recent Fixes
+              <div className="bg-white border-[3px] border-brutalBlack p-5 shadow-brutal animate-slide-up relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-2 h-full bg-retroTeal border-l-[3px] border-brutalBlack"></div>
+                <h3 className="text-sm font-black text-brutalBlack uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <span>🏆</span> RECENT FIXES
                 </h3>
-                <div className="space-y-2.5">
+                <div className="space-y-3 pr-3">
                   {completedStacks.map((stack) => (
-                    <div key={stack.id} className="flex items-center justify-between">
-                      <p className="text-sm text-obsidian truncate flex-1">{stack.concept.name}</p>
-                      <span className={`mono-number text-xs font-bold flex-shrink-0 ml-3 ${
-                        (stack.recheckScore ?? 0) >= 70 ? 'text-mastery-high' : 'text-mastery-mid'
+                    <div key={stack.id} className="flex items-center justify-between border-b-[1.5px] border-neutral-200 pb-2 last:border-0 last:pb-0">
+                      <p className="text-xs font-black text-brutalBlack uppercase truncate flex-1">{stack.concept.name}</p>
+                      <span className={`font-mono text-[10px] font-black px-1.5 py-0.5 border border-brutalBlack ml-2 ${
+                        (stack.recheckScore ?? 0) >= 70 ? 'bg-retroTeal text-white' : 'bg-schoolYellow text-brutalBlack'
                       }`}>
                         {stack.recheckScore !== null ? `${stack.recheckScore}%` : '✓'}
                       </span>
@@ -285,12 +289,13 @@ export default async function DashboardPage() {
             )}
 
             {/* Quick Action */}
-            <div className="card-elevated p-5 text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
-              <p className="text-sm text-obsidian-subtle mb-3">Ready for precision learning?</p>
-              <Link href="/topics" className="btn-primary px-6 py-2.5 w-full inline-block text-center">
-                New Diagnostic →
+            <div className="bg-schoolYellow border-[3px] border-brutalBlack p-5 shadow-brutal text-center animate-slide-up">
+              <p className="font-mono text-xs font-bold text-brutalBlack uppercase mb-3">Ready for precision learning?</p>
+              <Link href="/topics" className="bg-brutalBlack hover:bg-neutral-800 text-white font-black text-sm px-4 py-3 border-[2.5px] border-brutalBlack shadow-brutal-sm btn-brutal uppercase block w-full">
+                NEW DIAGNOSTIC ➔
               </Link>
             </div>
+
           </div>
         </div>
       </main>
