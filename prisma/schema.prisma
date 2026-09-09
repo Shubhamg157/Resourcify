@@ -1,0 +1,246 @@
+// Resourcify — Prisma Schema
+// Using SQLite for prototype; swap to PostgreSQL by changing only the datasource block.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// User & Auth
+// ─────────────────────────────────────────────
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  examTarget String   // "JEE Main" | "JEE Advanced" | "Both"
+  createdAt  DateTime @default(now())
+
+  questionAttempts    QuestionAttempt[]
+  diagnosticSessions  DiagnosticSession[]
+  learningStacks      LearningStack[]
+  knowledgeStates     KnowledgeState[]
+  chatMessages        ChatMessage[]
+}
+
+// ─────────────────────────────────────────────
+// Content Hierarchy: Subject → Chapter → Topic → Subtopic → Concept
+// ─────────────────────────────────────────────
+
+model Subject {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  chapters Chapter[]
+  resources Resource[]
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  subjectId String
+  name      String
+  sortOrder Int      @default(0)
+
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  topics    Topic[]
+  resources Resource[]
+
+  @@unique([subjectId, name])
+}
+
+model Topic {
+  id        String    @id @default(cuid())
+  chapterId String
+  name      String
+  sortOrder Int       @default(0)
+
+  chapter   Chapter   @relation(fields: [chapterId], references: [id])
+  subtopics Subtopic[]
+  diagnosticSessions DiagnosticSession[]
+
+  @@unique([chapterId, name])
+}
+
+model Subtopic {
+  id       String    @id @default(cuid())
+  topicId  String
+  name     String
+  sortOrder Int      @default(0)
+
+  topic    Topic     @relation(fields: [topicId], references: [id])
+  concepts Concept[]
+  resources Resource[]
+
+  @@unique([topicId, name])
+}
+
+model Concept {
+  id          String   @id @default(cuid())
+  subtopicId  String
+  name        String
+  description String   @default("")
+
+  subtopic    Subtopic @relation(fields: [subtopicId], references: [id])
+  questions   Question[]
+  resources   Resource[]
+  knowledgeStates KnowledgeState[]
+  learningStacks  LearningStack[]
+
+  // Self-referencing prerequisites
+  prerequisites    Prerequisite[]  @relation("ConceptPrerequisites")
+  prerequisiteFor  Prerequisite[]  @relation("PrerequisiteFor")
+
+  @@unique([subtopicId, name])
+}
+
+model Prerequisite {
+  id                    String  @id @default(cuid())
+  conceptId             String
+  prerequisiteConceptId String
+
+  concept               Concept @relation("ConceptPrerequisites", fields: [conceptId], references: [id])
+  prerequisiteConcept   Concept @relation("PrerequisiteFor", fields: [prerequisiteConceptId], references: [id])
+
+  @@unique([conceptId, prerequisiteConceptId])
+}
+
+// ─────────────────────────────────────────────
+// Questions & Attempts
+// ─────────────────────────────────────────────
+
+model Question {
+  id                  String   @id @default(cuid())
+  conceptId           String
+  prompt              String
+  options             String   // JSON array of option strings, stored as text for SQLite
+  correctOptionIndex  Int      // 0-based index into options array
+  difficulty          Int      @default(3)  // 1-5 scale
+  examRelevance       Int      @default(3)  // 1-5 scale
+  questionType        String   // "fundamental" | "formula" | "application" | "misconception" | "jee_style"
+  commonMisconception String   @default("")
+
+  concept             Concept  @relation(fields: [conceptId], references: [id])
+  attempts            QuestionAttempt[]
+}
+
+model QuestionAttempt {
+  id                String   @id @default(cuid())
+  userId            String
+  questionId        String
+  sessionId         String   // DiagnosticSession id
+  selectedOptionIndex Int
+  isCorrect         Boolean
+  createdAt         DateTime @default(now())
+
+  user              User     @relation(fields: [userId], references: [id])
+  question          Question @relation(fields: [questionId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// Diagnostic Sessions
+// ─────────────────────────────────────────────
+
+model DiagnosticSession {
+  id               String   @id @default(cuid())
+  userId           String
+  topicId          String
+  createdAt        DateTime @default(now())
+  overallScore     Int      @default(0)    // percentage 0-100
+  confidence       Float    @default(0)    // 0.0 - 1.0
+  masteredConcepts String   @default("[]") // JSON array
+  weakConcepts     String   @default("[]") // JSON array
+  rootCause        String   @default("[]") // JSON array
+  errorType        String   @default("[]") // JSON array
+
+  user             User     @relation(fields: [userId], references: [id])
+  topic            Topic    @relation(fields: [topicId], references: [id])
+  learningStacks   LearningStack[]
+}
+
+// ─────────────────────────────────────────────
+// Resources
+// ─────────────────────────────────────────────
+
+model Resource {
+  id              String   @id @default(cuid())
+  title           String
+  type            String   // VIDEO | SHORT_VIDEO | ONE_SHOT | NOTES | FORMULA_SHEET | ARTICLE | PYQ | QUESTION_BANK | WORKED_EXAMPLE | PRACTICE_SET | NCERT | MOCK_TEST | DOUBT_RESOURCE
+  subjectId       String?
+  chapterId       String?
+  subtopicId      String?
+  conceptId       String?
+  difficulty      Int      @default(3)
+  examRelevance   Int      @default(3)
+  source          String   @default("")
+  url             String   @default("")
+  durationSeconds Int      @default(0)
+  language        String   @default("en")
+  qualityScore    Int      @default(3)  // 1-5
+  verified        Boolean  @default(false)
+
+  subject         Subject?  @relation(fields: [subjectId], references: [id])
+  chapter         Chapter?  @relation(fields: [chapterId], references: [id])
+  subtopic        Subtopic? @relation(fields: [subtopicId], references: [id])
+  concept         Concept?  @relation(fields: [conceptId], references: [id])
+  learningStacks  LearningStack[]
+}
+
+// ─────────────────────────────────────────────
+// Learning Stack (Recovery)
+// ─────────────────────────────────────────────
+
+model LearningStack {
+  id                   String   @id @default(cuid())
+  userId               String
+  diagnosticSessionId  String
+  conceptId            String
+  estimatedMinutes     Int      @default(20)
+  explanationText      String   @default("")
+  formulaCardJson      String   @default("{}") // JSON
+  resourceId           String?
+  practiceQuestionIds  String   @default("[]") // JSON array of question IDs
+  completed            Boolean  @default(false)
+  recheckScore         Int?     // null until recheck is done
+  createdAt            DateTime @default(now())
+
+  user                 User              @relation(fields: [userId], references: [id])
+  diagnosticSession    DiagnosticSession @relation(fields: [diagnosticSessionId], references: [id])
+  concept              Concept           @relation(fields: [conceptId], references: [id])
+  resource             Resource?         @relation(fields: [resourceId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// Knowledge State (Mastery Tracking)
+// ─────────────────────────────────────────────
+
+model KnowledgeState {
+  id             String   @id @default(cuid())
+  userId         String
+  conceptId      String
+  masteryPercent Int      @default(0) // 0-100
+  lastUpdated    DateTime @default(now())
+
+  user           User    @relation(fields: [userId], references: [id])
+  concept        Concept @relation(fields: [conceptId], references: [id])
+
+  @@unique([userId, conceptId])
+}
+
+// ─────────────────────────────────────────────
+// Chat
+// ─────────────────────────────────────────────
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  userId         String
+  sessionId      String   @default("")
+  role           String   // "user" | "assistant"
+  content        String
+  contextTopicId String?
+  createdAt      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id])
+}
